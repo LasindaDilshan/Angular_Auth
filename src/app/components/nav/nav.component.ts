@@ -1,3 +1,4 @@
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavComponent implements OnInit {
  authenticated = false;
-  constructor(private authservice : AuthService,private router: Router) { }
+  constructor(private authservice : AuthService,private router: Router , private socialAuhService : SocialAuthService) { }
 
   ngOnInit(): void {
     AuthService.authEmitter.subscribe(authenticated =>{
@@ -18,12 +19,16 @@ export class NavComponent implements OnInit {
   }
 
   logout(){
+    console.log('log out');
+    this.socialAuhService.signOut();
 
     this.authservice.logout().subscribe(
 {next:(res) => {
   this.authservice.accessToken='';
   console.log(res);
   AuthService.authEmitter.emit(false);
+  AuthService.googleLogout.emit(true);
+
   this.router.navigate(['/login']);
 },
 error:(error)=>{alert('Logout Failed');}

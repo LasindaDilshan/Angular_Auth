@@ -13,6 +13,9 @@ import { AuthInterceptor } from './inerceptors/auth.interceptor';
 import { ForgotComponent } from './pages/forgot/forgot.component';
 import { CommonModule } from '@angular/common';
 import { ResetComponent } from './pages/reset/reset.component';
+import { FormComponent } from './pages/login/form/form.component';
+import { AuthenticatorComponent } from './pages/login/authenticator/authenticator.component';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -22,18 +25,41 @@ import { ResetComponent } from './pages/reset/reset.component';
     HomeComponent,
     NavComponent,
     ForgotComponent,
-    ResetComponent
+    ResetComponent,
+    FormComponent,
+    AuthenticatorComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CommonModule
-  ],
+    CommonModule,
+    SocialLoginModule
+   ]
+    ,
+
   providers: [ {provide: HTTP_INTERCEPTORS,
   useClass: AuthInterceptor,
-multi:true}],
+multi:true},
+
+  {
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: false,
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider(
+            '127115882562-o1ncfvcnq2cuoj6qt7n8mqs627fspru4.apps.googleusercontent.com'
+          )
+        }
+        
+      ]
+    
+  },
+}
+],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
